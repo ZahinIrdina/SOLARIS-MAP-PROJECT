@@ -1,1 +1,53 @@
+SmartPass - Sprint 1 Progress
+This sprint focused on building the authentication and role personalization foundation.
 
+ - Authentication & Security: Implemented email/password registration, secure login/logout, forgot password recovery, and persistent login via Firebase Auth.
+
+ - Role-Based Access Control (RBAC): Integrated Firestore to detect user roles (Student vs. Invigilator) and route them securely.
+
+ - Custom Dashboards: Built distinct UI interfaces for Students (Exam Slips & Break History) and Invigilators (Active out quotas, timers, and check-in actions).
+
+ - User Profiles: Enabled users to view their personal data fetched directly from the database.
+
+Initial MVVM Architecture
+
+lib/
+├── models/
+│   ├── user_model.dart         
+│   ├── user_profile.dart        
+│   ├── exam.dart                
+│   └── washroom_break.dart     
+├── services/
+│   ├── auth_service.dart        
+│   └── firestore_service.dart   
+├── viewmodels/
+│   └── auth_viewmodel.dart      
+├── theme/
+│   └── app_theme.dart           
+├── utils/
+│   └── format.dart              
+├── widgets/
+│   ├── app_drawer.dart          
+│   ├── app_header.dart          
+│   ├── bottom_nav.dart          
+│   ├── greeting_card.dart       
+│   ├── home_tile.dart           
+│   ├── info_row.dart            
+│   ├── profile_avatar.dart      
+│   └── settings_sheet.dart      
+├── screens/
+│   ├── app_shell.dart          
+│   ├── edit_profile_screen.dart 
+│   ├── exam_slip_screen.dart    
+│   ├── home_screen.dart         
+│   ├── profile_screen.dart    
+│   └── washroom_history_screen.dart 
+├── views/
+│   ├── auth_wrapper.dart        
+│   ├── login_view.dart  
+│   ├── register_view.dart 
+│   ├── role_selection_view.dart 
+│   ├── forgot_password_view.dart 
+│   └── student_dashboard.dart   
+├── firebase_options.dart       
+└── main.dart                    
