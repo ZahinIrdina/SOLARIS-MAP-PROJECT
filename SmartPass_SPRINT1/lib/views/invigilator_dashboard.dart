@@ -174,9 +174,28 @@ void _openProfile(BuildContext context, String roleLabel) {
   ).push(MaterialPageRoute(builder: (_) => ProfilePage(roleLabel: roleLabel)));
 }
 
-class ProfilePage extends StatelessWidget {
+
+class ProfilePage extends StatefulWidget {
   final String roleLabel;
+
   const ProfilePage({super.key, required this.roleLabel});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late Future<Map<String, dynamic>?> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  void _loadProfile() {
+    _profileFuture = context.read<AuthViewModel>().getUserProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,49 +205,290 @@ class ProfilePage extends StatelessWidget {
         foregroundColor: Colors.white,
         title: const Text('Profile'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          const Center(
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: kMaroon,
-              child: Icon(Icons.person, color: Colors.white, size: 56),
+      body: FutureBuilder<Map<String, dynamic>?>(
+        future: _profileFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError || snapshot.data == null) {
+            return const Center(
+              child: Text('Unable to load profile.'),
+            );
+          }
+
+          final profile = snapshot.data!;
+
+          final name = profile['name'] ?? 'User';
+          final email = profile['email'] ?? '-';
+          final staffId = profile['universityId'] ?? '-';
+          final phone = profile['phone'] ?? '-';
+
+          return ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              const Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: kMaroon,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 56,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Center(
+                child: Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              Center(child: Text(widget.roleLabel)),
+
+              const SizedBox(height: 24),
+
+              ListTile(
+                leading: const Icon(Icons.badge_outlined),
+                title: const Text('Staff ID'),
+                subtitle: Text(staffId),
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.email_outlined),
+                title: const Text('Email'),
+                subtitle: Text(email),
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.phone_outlined),
+                title: const Text('Phone Number'),
+                subtitle: Text(phone),
+              ),
+
+              const SizedBox(height: 16),
+
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: kMaroon,
+                ),
+                onPressed: () async {
+                  final updated = await Navigator.push<bool>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditProfilePage(
+                        profile: profile,
+                      ),
+                    ),
+                  );
+
+                  if (updated == true) {
+                    setState(() {
+                      _loadProfile();
+                    });
+                  }
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit Profile'),
+              ),
+
+              const SizedBox(height: 10),
+
+              OutlinedButton.icon(
+                onPressed: () => _open(context, 'Change Password'),
+                icon: const Icon(Icons.lock_outline),
+                label: const Text('Change Password'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+// EDIT PROFILE PAGE
+
+class EditProfilePage extends StatefulWidget {
+  final Map<String, dynamic> profile;
+
+  const EditProfilePage({
+    super.key,
+    required this.profile,
+  });
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  final _formKey = GlobalKey<FormState>();
+
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+
+  bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _nameController = TextEditingController(
+      text: widget.profile['name'] ?? '',
+    );
+
+    _phoneController = TextEditingController(
+      text: widget.profile['phone'] ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    final success = await context.read<AuthViewModel>().updateProfile(
+      fullName: _nameController.text.trim(),
+      phone: _phoneController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _isSaving = false;
+    });
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile updated successfully!'),
+        ),
+      );
+
+      Navigator.pop(context, true);
+    } else {
+      final error = context.read<AuthViewModel>().errorMessage;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error ?? 'Failed to update profile.'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kMaroon,
+        foregroundColor: Colors.white,
+        title: const Text('Edit Profile'),
+      ),
+
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            const Center(
+              child: CircleAvatar(
+                radius: 45,
+                backgroundColor: kMaroon,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          const Center(
-            child: Text(
-              'User',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Full Name',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-          ),
-          Center(child: Text(roleLabel)),
-          const SizedBox(height: 24),
-          const ListTile(
-            leading: Icon(Icons.badge_outlined),
-            title: Text('Staff ID'),
-            subtitle: Text('S000000'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.email_outlined),
-            title: Text('Email'),
-            subtitle: Text('user@utm.my'),
-          ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            style: FilledButton.styleFrom(backgroundColor: kMaroon),
-            onPressed: () => _open(context, 'Edit Profile'),
-            icon: const Icon(Icons.edit),
-            label: const Text('Edit Profile'),
-          ),
-          const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: () => _open(context, 'Change Password'),
-            icon: const Icon(Icons.lock_outline),
-            label: const Text('Change Password'),
-          ),
-        ],
+
+            const SizedBox(height: 8),
+
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                hintText: 'Enter your full name',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name.';
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 18),
+
+            const Text(
+              'Phone Number',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 8),
+
+            TextFormField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                hintText: 'Enter your phone number',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.phone_outlined),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your phone number.';
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 28),
+
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: kMaroon,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+              ),
+              onPressed: _isSaving ? null : _saveProfile,
+              child: _isSaving
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text('Save Changes'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -245,6 +505,27 @@ class InvigilatorDashboardView extends StatefulWidget {
   @override
   State<InvigilatorDashboardView> createState() =>
       _InvigilatorDashboardPageState();
+}
+
+
+Widget _drawerItem(
+  IconData icon,
+  String label,
+  VoidCallback onTap,
+) {
+  return ListTile(
+    leading: Icon(
+      icon,
+      color: kMaroon,
+    ),
+    title: Text(
+      label,
+      style: const TextStyle(
+        fontSize: 15,
+      ),
+    ),
+    onTap: onTap,
+  );
 }
 
 class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
@@ -291,52 +572,159 @@ class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
               ),
             ],
           ),
+          
           drawer: Drawer(
-            child: ListView(
+            backgroundColor: Colors.white,
+            child: Column(
               children: [
-                const DrawerHeader(
-                  decoration: BoxDecoration(color: kMaroon),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      'SmartPass',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                Container(
+                  width: double.infinity,
+                  color: kMaroon,
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    MediaQuery.of(context).padding.top + 24,
+                    20,
+                    24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        radius: 36,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          color: kMaroon,
+                          size: 42,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 14),
+                      Text(
+                        vm.userName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        vm.roleLabel,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text('Profile'),
-                  onTap: () {
+
+                const SizedBox(height: 8),
+
+                _drawerItem(
+                  Icons.home_rounded,
+                  'Home',
+                  () => Navigator.pop(context),
+                ),
+
+                if (vm.isHall) ...[
+                  _drawerItem(
+                    Icons.qr_code_scanner,
+                    'QR Scan',
+                    () {
+                      Navigator.pop(context);
+                      _open(context, 'QR Scan');
+                    },
+                  ),
+                  _drawerItem(
+                    Icons.login,
+                    'Manual Check-In',
+                    () {
+                      Navigator.pop(context);
+                      _open(context, 'Manual Check-In');
+                    },
+                  ),
+                ],
+
+                _drawerItem(
+                  Icons.people_outline,
+                  'Active Students',
+                  () {
+                    Navigator.pop(context);
+                    _open(context, 'Active Students');
+                  },
+                ),
+
+                _drawerItem(
+                  Icons.hourglass_empty,
+                  'Waiting List',
+                  () {
+                    Navigator.pop(context);
+                    _open(context, 'Waiting List');
+                  },
+                ),
+
+                _drawerItem(
+                  Icons.description_outlined,
+                  'Exam Records',
+                  () {
+                    Navigator.pop(context);
+                    _open(context, 'Exam Records');
+                  },
+                ),
+
+                _drawerItem(
+                  Icons.info_outline,
+                  'Examination Details',
+                  () {
+                    Navigator.pop(context);
+                    _open(context, 'Examination Detail');
+                  },
+                ),
+
+                _drawerItem(
+                  Icons.chat_bubble_outline,
+                  'In-App Chat',
+                  () {
+                    Navigator.pop(context);
+                    _open(context, 'In-App Chat');
+                  },
+                ),
+
+                _drawerItem(
+                  Icons.person_outline,
+                  'Profile',
+                  () {
                     Navigator.pop(context);
                     _openProfile(context, vm.roleLabel);
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
-                  onTap: () {
+
+                _drawerItem(
+                  Icons.settings_outlined,
+                  'Settings',
+                  () {
                     Navigator.pop(context);
                     _open(context, 'Settings');
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
-                  onTap: () {
+
+                const Spacer(),
+
+                _drawerItem(
+                  Icons.logout,
+                  'Logout',
+                  () {
                     Navigator.pop(context);
-                    // Call your AuthViewModel to logout
-                    // Make sure to import provider and your viewmodel at the top
                     context.read<AuthViewModel>().logout();
                   },
                 ),
+
+                SizedBox(height: MediaQuery.of(context).padding.bottom + 8),
               ],
             ),
           ),
+
           body: ListView(
             padding: const EdgeInsets.all(14),
             children: [

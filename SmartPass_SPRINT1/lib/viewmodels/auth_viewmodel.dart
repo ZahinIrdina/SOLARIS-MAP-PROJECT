@@ -108,6 +108,46 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  // --- GET USER PROFILE ---
+  Future<Map<String, dynamic>?> getUserProfile() async {
+    _setLoading(true);
+    _setError(null);
+
+    try {
+      final profile = await _authService.getUserProfile();
+      _setLoading(false);
+      return profile;
+    } catch (e) {
+      _setError(e.toString().replaceAll("Exception: ", ""));
+      _setLoading(false);
+      return null;
+    }
+  }
+
+  // --- UPDATE USER PROFILE ---
+  Future<bool> updateProfile({
+    required String fullName,
+    required String phone,
+  }) async {
+    _setLoading(true);
+    _setError(null);
+
+    try {
+      await _authService.updateUserProfile(
+        fullName: fullName,
+        phone: phone,
+      );
+
+      _setLoading(false);
+      return true;
+    } catch (e) {
+      _setError(e.toString().replaceAll("Exception: ", ""));
+      _setLoading(false);
+      return false;
+    }
+  }
+
   // --- PASSWORD RESET LOGIC ---
   Future<bool> resetPassword(String email) async {
     _setLoading(true);
