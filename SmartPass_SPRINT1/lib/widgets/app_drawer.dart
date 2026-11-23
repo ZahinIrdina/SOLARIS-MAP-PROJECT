@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
 import 'profile_avatar.dart';
@@ -58,13 +59,26 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          _item(Icons.home_rounded, 'Home', () => closeThen(() => onSelectTab(1))),
-          _item(Icons.description_outlined, 'Examination Slip',
-              () => closeThen(() => onSelectTab(0))),
-          _item(Icons.history, 'Washroom Break History',
-              () => closeThen(onOpenWashroomHistory)),
-          _item(Icons.person_outline, 'Profile',
-              () => closeThen(() => onSelectTab(2))),
+          _item(
+            Icons.home_rounded,
+            'Home',
+            () => closeThen(() => onSelectTab(1)),
+          ),
+          _item(
+            Icons.description_outlined,
+            'Examination Slip',
+            () => closeThen(() => onSelectTab(0)),
+          ),
+          _item(
+            Icons.history,
+            'Washroom Break History',
+            () => closeThen(onOpenWashroomHistory),
+          ),
+          _item(
+            Icons.person_outline,
+            'Profile',
+            () => closeThen(() => onSelectTab(2)),
+          ),
           const Spacer(),
           SizedBox(height: MediaQuery.of(context).padding.bottom + 8),
         ],
@@ -73,8 +87,8 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _item(IconData icon, String label, VoidCallback onTap) => ListTile(
-        leading: Icon(icon, color: AppColors.maroon),
-        title: Text(label, style: AppFonts.serif(size: 15)),
-        onTap: onTap,
-      );
+    leading: Icon(icon, color: AppColors.maroon),
+    title: Text(label, style: AppFonts.serif(size: 15)),
+    onTap: onTap,
+  );
 }

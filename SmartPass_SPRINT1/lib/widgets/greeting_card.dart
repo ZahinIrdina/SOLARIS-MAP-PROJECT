@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/exam.dart';
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
@@ -27,9 +28,10 @@ class GreetingCard extends StatelessWidget {
         ? (student ? "Today's exam is at" : 'Today you invigilate at')
         : (student ? 'Your next exam is at' : 'Your next session is at');
 
-    final venue = [e.hall, if (student) profile.seat]
-        .where((s) => s.trim().isNotEmpty)
-        .join(', ');
+    final venue = [
+      e.hall,
+      if (student) profile.seat,
+    ].where((s) => s.trim().isNotEmpty).join(', ');
 
     if (venue.isEmpty) return '$lead ${e.location}'.trim();
     if (e.location.isEmpty) return '$lead $venue';

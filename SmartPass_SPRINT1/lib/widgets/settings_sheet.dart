@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/user_profile.dart';
 import '../screens/edit_profile_screen.dart';
 import '../theme/app_theme.dart';

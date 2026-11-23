@@ -20,14 +20,18 @@ class WashroomBreak {
   /// Null while the student is still out of the hall.
   final DateTime? inAt;
 
-  factory WashroomBreak.fromDoc(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+  factory WashroomBreak.fromDoc(
+    QueryDocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final d = doc.data();
     return WashroomBreak(
       id: doc.id,
       studentId: (d['studentId'] as String?) ?? '',
       studentName: (d['studentName'] as String?) ?? '',
       examId: (d['examId'] as String?) ?? '',
-      outAt: (d['outAt'] as Timestamp?)?.toDate() ?? DateTime.fromMillisecondsSinceEpoch(0),
+      outAt:
+          (d['outAt'] as Timestamp?)?.toDate() ??
+          DateTime.fromMillisecondsSinceEpoch(0),
       inAt: (d['inAt'] as Timestamp?)?.toDate(),
     );
   }

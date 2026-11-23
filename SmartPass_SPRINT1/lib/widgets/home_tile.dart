@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../theme/app_theme.dart';
 
 /// Large rounded maroon card with a white outline icon and a two-line title.
@@ -33,7 +34,11 @@ class HomeTile extends StatelessWidget {
               children: [
                 SizedBox(
                   width: 92,
-                  child: Icon(icon, size: iconSize, color: AppColors.onMaroonSoft),
+                  child: Icon(
+                    icon,
+                    size: iconSize,
+                    color: AppColors.onMaroonSoft,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Colours sampled from the wireframes.
@@ -20,26 +20,24 @@ class AppFonts {
     FontWeight weight = FontWeight.w400,
     Color color = AppColors.maroon,
     double? height,
-  }) =>
-      GoogleFonts.libreBaskerville(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        height: height,
-      );
+  }) => GoogleFonts.libreBaskerville(
+    fontSize: size,
+    fontWeight: weight,
+    color: color,
+    height: height,
+  );
 
   static TextStyle sans({
     double size = 14,
     FontWeight weight = FontWeight.w400,
     Color color = Colors.black87,
     double? height,
-  }) =>
-      GoogleFonts.sourceSans3(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        height: height,
-      );
+  }) => GoogleFonts.sourceSans3(
+    fontSize: size,
+    fontWeight: weight,
+    color: color,
+    height: height,
+  );
 }
 
 ThemeData buildAppTheme() {

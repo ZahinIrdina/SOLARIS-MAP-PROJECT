@@ -4,8 +4,10 @@
 //   views/invigilator_dashboard_page.dart (+ ProfilePage, PlaceholderPage)
 
 import 'dart:math';
-import 'package:flutter/material.dart';
+
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+
 import '../viewmodels/auth_viewmodel.dart';
 
 const kMaroon = Color(0xFF990000);
@@ -71,7 +73,8 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
   }
 
   String get userName => 'User';
-  String get examInfo => "Today's exam is at DK8, N24,\nFaculty of Computing, UTM";
+  String get examInfo =>
+      "Today's exam is at DK8, N24,\nFaculty of Computing, UTM";
 
   int get quota => 2;
 
@@ -88,24 +91,24 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
 
   final List<ActiveStudent> activeStudents = const [
     ActiveStudent(
-        name: 'Nurul Binti Samad',
-        matric: 'A270000',
-        timer: '15:00',
-        overTime: true,
-        isFemale: true),
+      name: 'Nurul Binti Samad',
+      matric: 'A270000',
+      timer: '15:00',
+      overTime: true,
+      isFemale: true,
+    ),
     ActiveStudent(
-        name: 'Aina Binti Hassan',
-        matric: 'A270002',
-        timer: '7:30',
-        isFemale: true),
+      name: 'Aina Binti Hassan',
+      matric: 'A270002',
+      timer: '7:30',
+      isFemale: true,
+    ),
     ActiveStudent(name: 'Ahmad Bin Ali', matric: 'A270001', timer: '3:00'),
   ];
 
   final List<WaitingStudent> waitingStudents = const [
-    WaitingStudent(
-        name: 'Siti Binti Ahmad', matric: 'A270003', isFemale: true),
-    WaitingStudent(
-        name: 'Farah Binti Omar', matric: 'A270004', isFemale: true),
+    WaitingStudent(name: 'Siti Binti Ahmad', matric: 'A270003', isFemale: true),
+    WaitingStudent(name: 'Farah Binti Omar', matric: 'A270004', isFemale: true),
   ];
 
   String get quotaNote {
@@ -117,8 +120,11 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
   }
 
   List<DashboardAction> get actions {
-    final chat =
-        DashboardAction('In-App\nChat', Icons.chat_bubble, badge: unreadChats);
+    final chat = DashboardAction(
+      'In-App\nChat',
+      Icons.chat_bubble,
+      badge: unreadChats,
+    );
     const detail = DashboardAction('Examination\nDetail', Icons.fact_check);
 
     if (!isHall) return [chat, detail];
@@ -147,24 +153,25 @@ class PlaceholderPage extends StatelessWidget {
         title: Text(title),
       ),
       body: Center(
-        child: Text('$title\n(coming soon)',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, color: Colors.black54)),
+        child: Text(
+          '$title\n(coming soon)',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 18, color: Colors.black54),
+        ),
       ),
     );
   }
 }
 
 void _open(BuildContext context, String title) {
-  Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => PlaceholderPage(title: title)),
-  );
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (_) => PlaceholderPage(title: title)));
 }
 
 void _openProfile(BuildContext context, String roleLabel) {
-  Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => ProfilePage(roleLabel: roleLabel)),
-  );
+  Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => ProfilePage(roleLabel: roleLabel)));
 }
 
 class ProfilePage extends StatelessWidget {
@@ -191,19 +198,23 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Center(
-            child: Text('User',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            child: Text(
+              'User',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
           ),
           Center(child: Text(roleLabel)),
           const SizedBox(height: 24),
           const ListTile(
-              leading: Icon(Icons.badge_outlined),
-              title: Text('Staff ID'),
-              subtitle: Text('S000000')),
+            leading: Icon(Icons.badge_outlined),
+            title: Text('Staff ID'),
+            subtitle: Text('S000000'),
+          ),
           const ListTile(
-              leading: Icon(Icons.email_outlined),
-              title: Text('Email'),
-              subtitle: Text('user@utm.my')),
+            leading: Icon(Icons.email_outlined),
+            title: Text('Email'),
+            subtitle: Text('user@utm.my'),
+          ),
           const SizedBox(height: 16),
           FilledButton.icon(
             style: FilledButton.styleFrom(backgroundColor: kMaroon),
@@ -226,8 +237,10 @@ class ProfilePage extends StatelessWidget {
 class InvigilatorDashboardView extends StatefulWidget {
   final InvigilatorRole initialRole;
 
-  const InvigilatorDashboardView(
-      {super.key, this.initialRole = InvigilatorRole.hallInvigilator});
+  const InvigilatorDashboardView({
+    super.key,
+    this.initialRole = InvigilatorRole.hallInvigilator,
+  });
 
   @override
   State<InvigilatorDashboardView> createState() =>
@@ -285,11 +298,14 @@ class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
                   decoration: BoxDecoration(color: kMaroon),
                   child: Align(
                     alignment: Alignment.bottomLeft,
-                    child: Text('SmartPass',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'SmartPass',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 ListTile(
@@ -313,14 +329,6 @@ class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
                   title: const Text('Logout'),
                   onTap: () {
                     Navigator.pop(context);
-                    _open(context, 'Logout');
-                  },
-                ),
-                 ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
-                  onTap: () {
-                    Navigator.pop(context);
                     // Call your AuthViewModel to logout
                     // Make sure to import provider and your viewmodel at the top
                     context.read<AuthViewModel>().logout();
@@ -338,10 +346,7 @@ class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
               ),
               const SizedBox(height: 12),
               if (vm.isHall) ...[
-                _StatsRow(
-                  vm: vm,
-                  onTap: (title) => _open(context, title),
-                ),
+                _StatsRow(vm: vm, onTap: (title) => _open(context, title)),
                 const SizedBox(height: 12),
               ],
               _ActiveStudentsCard(
@@ -349,10 +354,7 @@ class _InvigilatorDashboardPageState extends State<InvigilatorDashboardView> {
                 onTap: (s) => _open(context, s.name),
               ),
               const SizedBox(height: 12),
-              _WaitingCard(
-                vm: vm,
-                onTap: (s) => _open(context, s.name),
-              ),
+              _WaitingCard(vm: vm, onTap: (s) => _open(context, s.name)),
               const SizedBox(height: 12),
               _ActionGrid(
                 actions: vm.actions,
@@ -398,15 +400,19 @@ class _GreetingCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Good Morning, ${vm.userName}',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      'Good Morning, ${vm.userName}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 4),
-                    Text(vm.examInfo,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 11)),
+                    Text(
+                      vm.examInfo,
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
                   ],
                 ),
               ),
@@ -436,16 +442,18 @@ class _StatsRow extends StatelessWidget {
               child: Column(
                 children: [
                   _QuotaBar(
-                      label: 'Female',
-                      out: vm.femaleOut,
-                      quota: vm.quota,
-                      color: kFemale),
+                    label: 'Female',
+                    out: vm.femaleOut,
+                    quota: vm.quota,
+                    color: kFemale,
+                  ),
                   const SizedBox(height: 8),
                   _QuotaBar(
-                      label: 'Male',
-                      out: vm.maleOut,
-                      quota: vm.quota,
-                      color: kMale),
+                    label: 'Male',
+                    out: vm.maleOut,
+                    quota: vm.quota,
+                    color: kMale,
+                  ),
                 ],
               ),
             ),
@@ -462,8 +470,9 @@ class _StatsRow extends StatelessWidget {
                     height: 56,
                     child: CustomPaint(
                       painter: _DonutPainter(
-                          male: vm.totalMaleBreaks,
-                          female: vm.totalFemaleBreaks),
+                        male: vm.totalMaleBreaks,
+                        female: vm.totalFemaleBreaks,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -492,8 +501,11 @@ class _DarkCard extends StatelessWidget {
   final String title;
   final Widget child;
   final VoidCallback onTap;
-  const _DarkCard(
-      {required this.title, required this.child, required this.onTap});
+  const _DarkCard({
+    required this.title,
+    required this.child,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -508,11 +520,14 @@ class _DarkCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               child,
             ],
@@ -528,11 +543,12 @@ class _QuotaBar extends StatelessWidget {
   final int out;
   final int quota;
   final Color color;
-  const _QuotaBar(
-      {required this.label,
-      required this.out,
-      required this.quota,
-      required this.color});
+  const _QuotaBar({
+    required this.label,
+    required this.out,
+    required this.quota,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -550,11 +566,12 @@ class _QuotaBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text('$out/$quota',
-            style: const TextStyle(color: Colors.white, fontSize: 10)),
+        Text(
+          '$out/$quota',
+          style: const TextStyle(color: Colors.white, fontSize: 10),
+        ),
         const SizedBox(width: 4),
-        Text(label,
-            style: const TextStyle(color: Colors.white, fontSize: 10)),
+        Text(label, style: const TextStyle(color: Colors.white, fontSize: 10)),
       ],
     );
   }
@@ -570,9 +587,10 @@ class _Legend extends StatelessWidget {
     return Row(
       children: [
         Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 4),
         Text(text, style: const TextStyle(color: Colors.white, fontSize: 10)),
       ],
@@ -606,7 +624,12 @@ class _DonutPainter extends CustomPainter {
 
     canvas.drawArc(rect, -pi / 2, maleSweep, false, base..color = kMale);
     canvas.drawArc(
-        rect, -pi / 2 + maleSweep, femaleSweep, false, base..color = kFemale);
+      rect,
+      -pi / 2 + maleSweep,
+      femaleSweep,
+      false,
+      base..color = kFemale,
+    );
   }
 
   @override
@@ -625,23 +648,30 @@ class _ActiveStudentsCard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 6, 4, 4),
-          child: Text(title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold)),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         if (list.isEmpty)
           const Padding(
             padding: EdgeInsets.fromLTRB(4, 0, 4, 6),
-            child: Text('No one out',
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+            child: Text(
+              'No one out',
+              style: TextStyle(color: Colors.white54, fontSize: 12),
+            ),
           )
         else
-          ...list.map((s) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: _StudentTile(student: s, onTap: () => onTap(s)),
-              )),
+          ...list.map(
+            (s) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: _StudentTile(student: s, onTap: () => onTap(s)),
+            ),
+          ),
       ],
     );
   }
@@ -699,7 +729,9 @@ class _StudentTile extends StatelessWidget {
                         width: 10,
                         height: 10,
                         decoration: const BoxDecoration(
-                            color: kMaroon, shape: BoxShape.circle),
+                          color: kMaroon,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                 ],
@@ -709,9 +741,13 @@ class _StudentTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(student.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13)),
+                  Text(
+                    student.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
                   Text(student.matric, style: const TextStyle(fontSize: 11)),
                 ],
               ),
@@ -726,11 +762,14 @@ class _StudentTile extends StatelessWidget {
                 children: [
                   const Icon(Icons.access_time, color: Colors.white, size: 22),
                   const SizedBox(width: 6),
-                  Text(student.timer,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500)),
+                  Text(
+                    student.timer,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -757,7 +796,10 @@ class _WaitingCard extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: _WaitingTile(
-            student: s, position: position, onTap: () => onTap(s)),
+          student: s,
+          position: position,
+          onTap: () => onTap(s),
+        ),
       );
     }).toList();
 
@@ -776,26 +818,34 @@ class _WaitingCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
             child: Row(
               children: [
-                Text('Waiting (${list.length})',
-                    style: const TextStyle(
-                        color: kMaroon,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  'Waiting (${list.length})',
+                  style: const TextStyle(
+                    color: kMaroon,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const Spacer(),
                 if (vm.quotaNote.isNotEmpty)
-                  Text(vm.quotaNote,
-                      style: const TextStyle(
-                          color: kMaroon,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600)),
+                  Text(
+                    vm.quotaNote,
+                    style: const TextStyle(
+                      color: kMaroon,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
               ],
             ),
           ),
           if (list.isEmpty)
             const Padding(
               padding: EdgeInsets.fromLTRB(4, 0, 4, 6),
-              child: Text('No one waiting',
-                  style: TextStyle(color: Colors.black54, fontSize: 12)),
+              child: Text(
+                'No one waiting',
+                style: TextStyle(color: Colors.black54, fontSize: 12),
+              ),
             )
           else
             ...rows,
@@ -809,8 +859,11 @@ class _WaitingTile extends StatelessWidget {
   final WaitingStudent student;
   final int position;
   final VoidCallback onTap;
-  const _WaitingTile(
-      {required this.student, required this.position, required this.onTap});
+  const _WaitingTile({
+    required this.student,
+    required this.position,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -828,20 +881,30 @@ class _WaitingTile extends StatelessWidget {
               CircleAvatar(
                 radius: 16,
                 backgroundColor: student.isFemale ? kFemale : kMale,
-                child: Text('$position',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text(
+                  '$position',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(student.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 13)),
-                    Text('${student.matric} · $gender queue',
-                        style: const TextStyle(fontSize: 11)),
+                    Text(
+                      student.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
+                    Text(
+                      '${student.matric} · $gender queue',
+                      style: const TextStyle(fontSize: 11),
+                    ),
                   ],
                 ),
               ),
@@ -897,12 +960,15 @@ class _ActionTile extends StatelessWidget {
                 children: [
                   Icon(action.icon, color: Colors.white, size: 56),
                   const SizedBox(height: 6),
-                  Text(action.label,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    action.label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -915,8 +981,10 @@ class _ActionTile extends StatelessWidget {
             child: CircleAvatar(
               radius: 12,
               backgroundColor: kDarkGrey,
-              child: Text('${action.badge}',
-                  style: const TextStyle(color: Colors.white, fontSize: 12)),
+              child: Text(
+                '${action.badge}',
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
           ),
       ],
@@ -928,8 +996,11 @@ class _BottomNav extends StatelessWidget {
   final VoidCallback onBook;
   final VoidCallback onHome;
   final VoidCallback onProfile;
-  const _BottomNav(
-      {required this.onBook, required this.onHome, required this.onProfile});
+  const _BottomNav({
+    required this.onBook,
+    required this.onHome,
+    required this.onProfile,
+  });
 
   Widget _item(IconData icon, VoidCallback onTap, {bool selected = false}) {
     return GestureDetector(

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/exam.dart';
 import '../models/user_profile.dart';
 import '../services/firestore_service.dart';
@@ -26,8 +27,9 @@ class _AppShellState extends State<AppShell> {
   static const _homeTab = 1;
 
   int _index = _homeTab;
-  late Stream<Exam?> _examStream =
-      FirestoreService.instance.watchExam(widget.profile.examId);
+  late Stream<Exam?> _examStream = FirestoreService.instance.watchExam(
+    widget.profile.examId,
+  );
 
   @override
   void didUpdateWidget(covariant AppShell oldWidget) {
@@ -90,4 +92,3 @@ class _AppShellState extends State<AppShell> {
     );
   }
 }
-

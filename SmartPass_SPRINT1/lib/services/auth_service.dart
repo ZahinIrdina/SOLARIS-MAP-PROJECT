@@ -22,7 +22,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
       final user = credential.user!;
 
       try {
@@ -62,6 +62,6 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       rethrow;
-    } 
+    }
   }
 }

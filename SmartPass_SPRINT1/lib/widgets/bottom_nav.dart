@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../theme/app_theme.dart';
 
 /// Three maroon circles (exam slip / home / profile) under a thin divider.
 class AppBottomNav extends StatelessWidget {
-  const AppBottomNav({super.key, required this.currentIndex, required this.onTap});
+  const AppBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -52,7 +57,11 @@ class AppBottomNav extends StatelessWidget {
 }
 
 class _NavCircle extends StatelessWidget {
-  const _NavCircle({required this.icon, required this.label, required this.onTap});
+  const _NavCircle({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   final IconData icon;
   final String label;

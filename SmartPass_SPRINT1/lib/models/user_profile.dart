@@ -61,7 +61,8 @@ class UserProfile {
   final String examId;
   final String photoUrl;
 
-  factory UserProfile.fromMap(String uid, Map<String, dynamic> d) => UserProfile(
+  factory UserProfile.fromMap(String uid, Map<String, dynamic> d) =>
+      UserProfile(
         uid: uid,
         role: UserRole.parse(d['role'] as String?),
         fullName: (d['fullName'] as String?) ?? '',
@@ -85,17 +86,19 @@ class UserProfile {
       isStudent ? "Student's Profile" : "Invigilator's Profile";
 
   factory UserProfile.fromAuthModel(UserModel authUser) {
-  return UserProfile(
-    uid: authUser.uid,
-    role: authUser.role == 'invigilator' ? UserRole.invigilator : UserRole.student,
-    fullName: authUser.fullName, 
-    email: authUser.email,
-    idNumber: authUser.matricNo, 
-    // These will be empty for now until they are assigned by the exam office
-    phone: '', 
-    faculty: '', 
-    seat: '', 
-    examId: '', 
-  );
-}
+    return UserProfile(
+      uid: authUser.uid,
+      role: authUser.role == 'invigilator'
+          ? UserRole.invigilator
+          : UserRole.student,
+      fullName: authUser.fullName,
+      email: authUser.email,
+      idNumber: authUser.matricNo,
+      // These will be empty for now until they are assigned by the exam office
+      phone: '',
+      faculty: '',
+      seat: '',
+      examId: '',
+    );
+  }
 }

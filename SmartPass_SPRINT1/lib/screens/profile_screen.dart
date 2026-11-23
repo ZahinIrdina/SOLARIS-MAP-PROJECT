@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_profile.dart';
@@ -74,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
                   label: 'Faculty',
                   value: profile.faculty,
                 ),
-                
+
                 // --- ADDED LOGOUT BUTTON HERE ---
                 const SizedBox(height: 20),
                 TextButton.icon(
@@ -85,12 +85,16 @@ class ProfileScreen extends StatelessWidget {
                   icon: const Icon(Icons.logout, color: Colors.red),
                   label: const Text(
                     'Logout',
-                    style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
+
                 // --------------------------------
-                
               ],
             ),
           ),

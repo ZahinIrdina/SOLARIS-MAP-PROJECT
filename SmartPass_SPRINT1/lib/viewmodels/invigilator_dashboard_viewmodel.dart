@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/invigilator_model.dart';
 
 class InvigilatorDashboardViewModel extends ChangeNotifier {
@@ -16,7 +17,8 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
   }
 
   String get userName => 'User';
-  String get examInfo => "Today's exam is at DK8, N24,\nFaculty of Computing, UTM";
+  String get examInfo =>
+      "Today's exam is at DK8, N24,\nFaculty of Computing, UTM";
 
   int get quota => 2;
 
@@ -30,8 +32,19 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
   int get unreadChats => 1;
 
   final List<ActiveStudent> activeStudents = const [
-    ActiveStudent(name: 'Nurul Binti Samad', matric: 'A270000', timer: '15:00', overTime: true, isFemale: true),
-    ActiveStudent(name: 'Aina Binti Hassan', matric: 'A270002', timer: '7:30', isFemale: true),
+    ActiveStudent(
+      name: 'Nurul Binti Samad',
+      matric: 'A270000',
+      timer: '15:00',
+      overTime: true,
+      isFemale: true,
+    ),
+    ActiveStudent(
+      name: 'Aina Binti Hassan',
+      matric: 'A270002',
+      timer: '7:30',
+      isFemale: true,
+    ),
     ActiveStudent(name: 'Ahmad Bin Ali', matric: 'A270001', timer: '3:00'),
   ];
 
@@ -49,7 +62,11 @@ class InvigilatorDashboardViewModel extends ChangeNotifier {
   }
 
   List<DashboardAction> get actions {
-    final chat = DashboardAction('In-App\nChat', Icons.chat_bubble, badge: unreadChats);
+    final chat = DashboardAction(
+      'In-App\nChat',
+      Icons.chat_bubble,
+      badge: unreadChats,
+    );
     const detail = DashboardAction('Examination\nDetail', Icons.fact_check);
 
     if (!isHall) return [chat, detail];

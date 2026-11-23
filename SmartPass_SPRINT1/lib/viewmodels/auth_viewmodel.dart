@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../services/auth_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
@@ -50,7 +51,7 @@ class AuthViewModel extends ChangeNotifier {
     try {
       // 1. Detect actual role from ID
       final detectedRole = detectRole(universityId);
-      
+
       if (detectedRole == null) {
         _setError('Invalid University ID format.');
         _setLoading(false);
@@ -73,6 +74,9 @@ class AuthViewModel extends ChangeNotifier {
         phone: phone,
         role: detectedRole,
       );
+
+      // Sign out so user is cleanly logged out until they log in on the login screen
+      await _authService.logout();
 
       _setLoading(false);
       return true;
@@ -103,8 +107,8 @@ class AuthViewModel extends ChangeNotifier {
     await _authService.logout();
     notifyListeners();
   }
-  
-    // --- PASSWORD RESET LOGIC ---
+
+  // --- PASSWORD RESET LOGIC ---
   Future<bool> resetPassword(String email) async {
     _setLoading(true);
     _setError(null);

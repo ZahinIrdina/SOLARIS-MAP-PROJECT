@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+
 import '../viewmodels/auth_viewmodel.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -43,12 +44,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       // Optional: clear the text field after success
       emailController.clear();
     } else {
-      final errorMsg = context.read<AuthViewModel>().errorMessage ?? 'Unable to send reset link.';
+      final errorMsg =
+          context.read<AuthViewModel>().errorMessage ??
+          'Unable to send reset link.';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMsg),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
       );
     }
   }
@@ -84,11 +84,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 const SizedBox(height: 35),
 
                 // Security Icon
-                Icon(
-                  Icons.shield_outlined,
-                  color: maroon,
-                  size: 105,
-                ),
+                Icon(Icons.shield_outlined, color: maroon, size: 105),
                 const SizedBox(height: 20),
 
                 // Page Heading
@@ -108,10 +104,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   "email address and we'll send you a link to "
                   "reset your password.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: maroon,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: maroon, fontSize: 12),
                 ),
                 const SizedBox(height: 40),
 
@@ -139,10 +132,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       fontSize: 12,
                       color: Colors.grey,
                     ),
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: maroon,
-                    ),
+                    prefixIcon: Icon(Icons.email_outlined, color: maroon),
                     filled: true,
                     fillColor: const Color(0xFFEEEEEE),
                     border: OutlineInputBorder(

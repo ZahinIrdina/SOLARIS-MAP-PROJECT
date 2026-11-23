@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "714628259623",
+    "project_id": "solaris-smartpass",
+    "storage_bucket": "solaris-smartpass.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714628259623:android:927c3450a11e28f9a45302",
+        "android_client_info": {
+          "package_name": "com.example.smart_pass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4ohw_EirvxVCSrP_eRKBo0tD44k9oJCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

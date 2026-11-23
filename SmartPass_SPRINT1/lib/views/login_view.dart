@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+
 import '../viewmodels/auth_viewmodel.dart';
+import 'auth_wrapper.dart';
 import 'register_view.dart';
 import 'forgot_password_view.dart';
 
@@ -37,10 +39,13 @@ class _StudentLoginViewState extends State<StudentLoginView> {
     );
 
     if (success && mounted) {
-      // AuthWrapper automatically handles navigation upon success.
-      // We just show a quick success message before it switches.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login successful!')),
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Login successful!')));
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const AuthWrapper()),
+        (route) => false,
       );
     }
   }
@@ -53,8 +58,10 @@ class _StudentLoginViewState extends State<StudentLoginView> {
   }) {
     return TextField(
       controller: controller,
-      obscureText: isPassword && isPasswordHidden,
-      keyboardType: isPassword ? TextInputType.text : TextInputType.emailAddress,
+      obscureText: isPassword && isPasswordHidden, //password visibility
+      keyboardType: isPassword
+          ? TextInputType.text
+          : TextInputType.emailAddress,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
@@ -62,7 +69,9 @@ class _StudentLoginViewState extends State<StudentLoginView> {
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
-                  isPasswordHidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  isPasswordHidden
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   color: maroon,
                   size: 20,
                 ),
@@ -129,7 +138,11 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                     const SizedBox(height: 5),
                     Text(
                       'SmartPass',
-                      style: TextStyle(fontSize: 29, fontWeight: FontWeight.bold, color: maroon),
+                      style: TextStyle(
+                        fontSize: 29,
+                        fontWeight: FontWeight.bold,
+                        color: maroon,
+                      ),
                     ),
                     Text(
                       'Smart Examination Management',
@@ -143,7 +156,11 @@ class _StudentLoginViewState extends State<StudentLoginView> {
               // Welcome Heading
               Text(
                 'Welcome Back!',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: maroon),
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: maroon,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -165,7 +182,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                 controller: passwordController,
                 isPassword: true,
               ),
-              
+
               // Error Message Display
               if (viewModel.errorMessage != null)
                 Padding(
@@ -181,10 +198,12 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // Navigate to the new view
+                    // Navigate to the forgot_password_view
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ForgotPasswordView()),
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordView(),
+                      ),
                     );
                   },
                   child: Text(
@@ -208,13 +227,18 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                     backgroundColor: maroon,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   child: viewModel.isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                           'Login',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                 ),
               ),
@@ -228,15 +252,21 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                   TextButton(
+                    // Navigate to the register_view
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const StudentRegisterView()),
+                        MaterialPageRoute(
+                          builder: (context) => const StudentRegisterView(),
+                        ),
                       );
                     },
                     child: Text(
                       'Register',
-                      style: TextStyle(color: maroon, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: maroon,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

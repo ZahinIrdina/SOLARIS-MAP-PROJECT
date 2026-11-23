@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../theme/app_theme.dart';
 
 /// Light-grey circle with the pink "image" glyph from the wireframe.

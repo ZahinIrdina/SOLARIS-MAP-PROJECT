@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/exam.dart';
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
@@ -105,9 +106,10 @@ class ExamSlipScreen extends StatelessWidget {
               InfoRow(
                 icon: Icons.place_outlined,
                 label: 'Venue',
-                value: [e.hall, e.location]
-                    .where((s) => s.isNotEmpty)
-                    .join(', '),
+                value: [
+                  e.hall,
+                  e.location,
+                ].where((s) => s.isNotEmpty).join(', '),
               ),
               if (student && profile.seat.isNotEmpty)
                 InfoRow(

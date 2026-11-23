@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../services/auth_service.dart';
 import 'login_view.dart';
-import 'student_dashboard.dart'; 
-import 'invigilator_dashboard.dart'; 
+import 'student_dashboard.dart';
+import 'invigilator_dashboard.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -18,7 +18,9 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         // 1. Loading state
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         // 2. Not logged in -> Login Page
@@ -31,18 +33,22 @@ class AuthWrapper extends StatelessWidget {
           future: authService.getUserRole(snapshot.data!.uid),
           builder: (context, roleSnapshot) {
             if (roleSnapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
             }
 
             final role = roleSnapshot.data;
 
             // 4. Route based on Role
             if (role == 'student') {
-              return const StudentDashboard(); 
+              return const StudentDashboard();
             } else if (role == 'invigilator') {
-              return const InvigilatorDashboardView(); 
+              return const InvigilatorDashboardView();
             } else {
-              return const Scaffold(body: Center(child: Text("Error: Role not found.")));
+              return const Scaffold(
+                body: Center(child: Text("Error: Role not found.")),
+              );
             }
           },
         );

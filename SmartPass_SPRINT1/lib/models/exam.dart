@@ -44,4 +44,3 @@ class Exam {
     return s.year == now.year && s.month == now.month && s.day == now.day;
   }
 }
-

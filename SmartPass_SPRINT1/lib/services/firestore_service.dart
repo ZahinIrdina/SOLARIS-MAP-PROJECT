@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/exam.dart';
 import '../models/washroom_break.dart';
 
@@ -27,7 +28,12 @@ class FirestoreService {
     return Stream.value([]);
   }
 
-  Future<void> updateProfile(String uid, {required String fullName, required String phone, required String faculty}) async {
+  Future<void> updateProfile(
+    String uid, {
+    required String fullName,
+    required String phone,
+    required String faculty,
+  }) async {
     await _db.collection('users').doc(uid).update({
       'name': fullName,
       'phone': phone,

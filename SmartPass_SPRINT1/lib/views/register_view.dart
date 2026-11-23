@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+
 import '../viewmodels/auth_viewmodel.dart';
+import 'auth_wrapper.dart';
 import 'login_view.dart';
-import 'role_selection_view.dart'; 
+import 'role_selection_view.dart';
 
 class StudentRegisterView extends StatefulWidget {
   const StudentRegisterView({super.key});
@@ -50,7 +52,10 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 11),
         filled: true,
         fillColor: fieldColor,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
@@ -66,7 +71,9 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
-                  isPasswordHidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  isPasswordHidden
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   size: 18,
                   color: maroon,
                 ),
@@ -142,17 +149,22 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
         barrierDismissible: false,
         builder: (context) => AlertDialog(
           title: const Text('Registration Successful!'),
-          content: const Text('Your Smart-Pass account has been created successfully.'),
+          content: const Text(
+            'Your Smart-Pass account has been created successfully.',
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const StudentLoginView()),
+                  MaterialPageRoute(builder: (context) => const AuthWrapper()),
                   (route) => false,
                 );
               },
-              child: const Text('Go to Login', style: TextStyle(color: Color(0xFFA00000))),
+              child: const Text(
+                'Go to Login',
+                style: TextStyle(color: Color(0xFFA00000)),
+              ),
             ),
           ],
         ),
@@ -188,10 +200,16 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const StudentLoginView()),
+                        MaterialPageRoute(
+                          builder: (context) => const StudentLoginView(),
+                        ),
                       );
                     },
-                    icon: const Icon(Icons.close, color: Color(0xFFA00000), size: 28),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Color(0xFFA00000),
+                      size: 28,
+                    ),
                   ),
                   const Spacer(),
                   Image.asset(
@@ -229,12 +247,18 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const StudentLoginView()),
+                        MaterialPageRoute(
+                          builder: (context) => const StudentLoginView(),
+                        ),
                       );
                     },
                     child: const Text(
                       'Log in here.',
-                      style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -272,7 +296,7 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
                 isPassword: true,
               ),
               const SizedBox(height: 25),
-              
+
               // Sign Up Button
               SizedBox(
                 width: double.infinity,
@@ -283,13 +307,18 @@ class _StudentRegisterViewState extends State<StudentRegisterView> {
                     backgroundColor: maroon,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   child: viewModel.isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                           'Sign up',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                 ),
               ),

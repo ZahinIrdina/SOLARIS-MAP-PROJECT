@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/user_profile.dart';
 import '../models/washroom_break.dart';
@@ -62,15 +62,15 @@ class _Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: AppFonts.serif(size: 16, color: AppColors.labelGrey),
-          ),
-        ),
-      );
+    child: Padding(
+      padding: const EdgeInsets.all(32),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: AppFonts.serif(size: 16, color: AppColors.labelGrey),
+      ),
+    ),
+  );
 }
 
 class _BreakCard extends StatelessWidget {
@@ -86,7 +86,7 @@ class _BreakCard extends StatelessWidget {
     final times = inAt == null
         ? 'Out ${formatTime(item.outAt)} · still out'
         : 'Out ${formatTime(item.outAt)} · In ${formatTime(inAt)}'
-            '${duration == null ? '' : ' (${formatDuration(duration)})'}';
+              '${duration == null ? '' : ' (${formatDuration(duration)})'}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),

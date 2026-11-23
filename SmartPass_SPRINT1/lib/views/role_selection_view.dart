@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RoleSelectionView extends StatelessWidget {
   const RoleSelectionView({super.key});
@@ -61,10 +61,7 @@ class RoleSelectionView extends StatelessWidget {
               ),
               Text(
                 'Smart Examination Management',
-                style: TextStyle(
-                  color: maroon,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: maroon, fontSize: 14),
               ),
               const Spacer(),
 
@@ -85,10 +82,7 @@ class RoleSelectionView extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Choose your role as Student or\nInvigilator',
-                  style: TextStyle(
-                    color: maroon,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: maroon, fontSize: 13),
                 ),
               ),
               const SizedBox(height: 25),
