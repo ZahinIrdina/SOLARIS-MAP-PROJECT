@@ -6,6 +6,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_header.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/settings_sheet.dart';
+import 'exam_info_screen.dart';
 import 'exam_slip_screen.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
@@ -35,6 +36,15 @@ class _AppShellState extends State<AppShell> {
     if (oldWidget.profile.examId != widget.profile.examId) {
       _examStream = FirestoreService.instance.watchExam(widget.profile.examId);
     }
+  }
+
+  void _openExamInfo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => ExamInfoScreen(profile: widget.profile),
+      ),
+    );
   }
 
   void _openWashroomHistory() {
@@ -69,6 +79,8 @@ class _AppShellState extends State<AppShell> {
                   () => setState(() => _index = _homeTab)),
               DrawerItem(Icons.description_outlined, 'Examination Slip',
                   () => setState(() => _index = _slipTab)),
+              DrawerItem(Icons.event_note_outlined, 'Examination Information',
+                  _openExamInfo),
               DrawerItem(Icons.history, 'Washroom Break History',
                   _openWashroomHistory),
               DrawerItem(Icons.person_outline, 'Profile',
@@ -84,6 +96,7 @@ class _AppShellState extends State<AppShell> {
                 exam: exam,
                 loading: loading,
                 onOpenExamSlip: () => setState(() => _index = _slipTab),
+                onOpenExamInfo: _openExamInfo,
                 onOpenWashroomHistory: _openWashroomHistory,
               ),
               ProfileScreen(profile: profile),
