@@ -49,16 +49,20 @@ class UserService {
   }
 
   /// Saves the three fields the Edit Profile screen exposes.
+  /// Uses set(merge) so the first save creates students/{matricNo} (or
+  /// lecturers/{staffId}) if it does not exist yet; later saves only change
+  /// these fields.
   Future<void> updateProfile(
     UserProfile profile, {
     required String fullName,
     required String phone,
     required String faculty,
   }) {
-    return _doc(profile.role, profile.idNumber).update({
+    return _doc(profile.role, profile.idNumber).set({
       'fullName': fullName,
       'phone': phone,
       'faculty': faculty,
-    });
+      'email': profile.email.toLowerCase(),
+    }, SetOptions(merge: true));
   }
 }
