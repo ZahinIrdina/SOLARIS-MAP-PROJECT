@@ -1,7 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../services/auth_service.dart';
-import '../utils/auth_errors.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -27,6 +26,16 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // --- ROLE DETECTION LOGIC from nas ---
+  String? detectRole(String id) {
+    id = id.trim().toUpperCase();
+    // Invigilator: exactly 5 digits
+    if (RegExp(r'^\d{5}$').hasMatch(id)) return 'invigilator';
+    // Student: A + 2 digits + 2 letters + 4 digits (e.g., A24CS5029)
+    if (RegExp(r'^A\d{2}[A-Z]{2}\d{4}$').hasMatch(id)) return 'student';
+    return null;
+  }
+
   // --- REGISTER LOGIC ---
   Future<bool> register({
     required String email,
@@ -40,14 +49,30 @@ class AuthViewModel extends ChangeNotifier {
     _setError(null);
 
     try {
-      // The service checks the ID against the students / lecturers tables.
+      // 1. Detect actual role from ID
+      final detectedRole = detectRole(universityId);
+
+      if (detectedRole == null) {
+        _setError('Invalid University ID format.');
+        _setLoading(false);
+        return false;
+      }
+
+      // 2. Verify selected role matches detected role
+      if (selectedRole.toLowerCase() != detectedRole) {
+        _setError('Your selected role does not match your University ID!');
+        _setLoading(false);
+        return false;
+      }
+
+      // 3. Create Account via Service
       await _authService.registerUser(
         email: email,
         password: password,
         fullName: fullName,
-        universityId: universityId,
+        universityId: universityId.toUpperCase(),
         phone: phone,
-        role: selectedRole,
+        role: detectedRole,
       );
 
       // Sign out so user is cleanly logged out until they log in on the login screen
@@ -56,7 +81,7 @@ class AuthViewModel extends ChangeNotifier {
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(friendlyAuthError(e));
+      _setError(e.toString().replaceAll("Exception: ", ""));
       _setLoading(false);
       return false;
     }
@@ -64,10 +89,6 @@ class AuthViewModel extends ChangeNotifier {
 
   // --- LOGIN LOGIC ---
   Future<bool> login(String email, String password) async {
-    if (email.trim().isEmpty || password.isEmpty) {
-      _setError('Please enter your email and password.');
-      return false;
-    }
     _setLoading(true);
     _setError(null);
     try {
@@ -75,7 +96,7 @@ class AuthViewModel extends ChangeNotifier {
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(friendlyAuthError(e));
+      _setError(e.toString().replaceAll("Exception: ", ""));
       _setLoading(false);
       return false;
     }
@@ -88,34 +109,40 @@ class AuthViewModel extends ChangeNotifier {
   }
 
 
-  // --- GET USER PROFILE (used by the invigilator dashboard's ProfilePage) ---
+  // --- GET USER PROFILE ---
   Future<Map<String, dynamic>?> getUserProfile() async {
     _setLoading(true);
     _setError(null);
+
     try {
       final profile = await _authService.getUserProfile();
       _setLoading(false);
       return profile;
     } catch (e) {
-      _setError(friendlyAuthError(e));
+      _setError(e.toString().replaceAll("Exception: ", ""));
       _setLoading(false);
       return null;
     }
   }
 
-  // --- UPDATE USER PROFILE (used by the invigilator dashboard's EditProfilePage) ---
+  // --- UPDATE USER PROFILE ---
   Future<bool> updateProfile({
     required String fullName,
     required String phone,
   }) async {
     _setLoading(true);
     _setError(null);
+
     try {
-      await _authService.updateUserProfile(fullName: fullName, phone: phone);
+      await _authService.updateUserProfile(
+        fullName: fullName,
+        phone: phone,
+      );
+
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(friendlyAuthError(e));
+      _setError(e.toString().replaceAll("Exception: ", ""));
       _setLoading(false);
       return false;
     }
@@ -130,7 +157,7 @@ class AuthViewModel extends ChangeNotifier {
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(friendlyAuthError(e));
+      _setError(e.toString().replaceAll("Exception: ", ""));
       _setLoading(false);
       return false;
     }

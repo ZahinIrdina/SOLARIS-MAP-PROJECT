@@ -1,16 +1,60 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/user_profile.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
-import 'invigilator_dashboard.dart';
 import 'login_view.dart';
 import 'student_dashboard.dart';
+import 'invigilator_dashboard.dart';
 
-/// Decides what to show after sign-in. The role comes ONLY from the user-info
-/// tables: found in `students` -> student dashboard, found in `lecturers` ->
-/// invigilator dashboard, found in neither -> error and sign out.
+/// Builds the student's [UserProfile] for [StudentDashboard].
+/// The ID comes from the sign-up record in `users/{uid}`; after that the
+/// profile streams live from `students/{matricNo}` so edits show straight
+/// away. If that document does not exist yet, the sign-up data is shown.
+class _StudentGate extends StatelessWidget {
+  const _StudentGate({required this.user});
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      future:
+          FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final d = snap.data?.data() ?? const <String, dynamic>{};
+        final base = UserProfile(
+          uid: user.uid,
+          role: UserRole.student,
+          fullName: (d['name'] as String?) ?? user.displayName ?? '',
+          email: (d['email'] as String?) ?? user.email ?? '',
+          phone: (d['phone'] as String?) ?? '',
+          idNumber: (d['universityId'] as String?) ?? '',
+        );
+        if (base.idNumber.isEmpty) return StudentDashboard(profile: base);
+
+        return StreamBuilder<UserProfile?>(
+          stream: UserService.instance.watchProfile(
+            UserRole.student,
+            base.idNumber,
+          ),
+          initialData: base,
+          builder: (context, p) =>
+              StudentDashboard(profile: p.data ?? base),
+        );
+      },
+    );
+  }
+}
+
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
@@ -21,81 +65,43 @@ class AuthWrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authService.authStateChanges, // Listens to login state
       builder: (context, snapshot) {
+        // 1. Loading state
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _Loading();
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
-        // Not logged in -> Login Page
+        // 2. Not logged in -> Login Page
         if (!snapshot.hasData || snapshot.data == null) {
           return const StudentLoginView();
         }
 
-        // Logged in -> look the account up in students / lecturers
-        return FutureBuilder<UserProfile?>(
-          future: UserService.instance.findByUid(snapshot.data!.uid),
-          builder: (context, recordSnapshot) {
-            if (recordSnapshot.connectionState == ConnectionState.waiting) {
-              return const _Loading();
-            }
-
-            final record = recordSnapshot.data;
-            if (record == null) {
-              return _NotRegistered(onLogout: authService.logout);
-            }
-
-            if (record.isStudent) {
-              // Streams live from students/{matricNo}, so edits show at once.
-              return StreamBuilder<UserProfile?>(
-                stream: UserService.instance.watchProfile(
-                  record.role,
-                  record.idNumber,
-                ),
-                initialData: record,
-                builder: (context, live) =>
-                    StudentDashboard(profile: live.data ?? record),
+        // 3. Logged in -> Check Role
+        return FutureBuilder<String?>(
+          future: authService.getUserRole(snapshot.data!.uid),
+          builder: (context, roleSnapshot) {
+            if (roleSnapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
               );
             }
-            return const InvigilatorDashboardView();
+
+            final role = roleSnapshot.data;
+
+            // 4. Route based on Role
+            if (role == 'student') {
+              return _StudentGate(user: snapshot.data!);
+            } else if (role == 'invigilator') {
+              return const InvigilatorDashboardView();
+            } else {
+              return const Scaffold(
+                body: Center(child: Text("Error: Role not found.")),
+              );
+            }
           },
         );
       },
-    );
-  }
-}
-
-class _Loading extends StatelessWidget {
-  const _Loading();
-
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
-}
-
-class _NotRegistered extends StatelessWidget {
-  const _NotRegistered({required this.onLogout});
-
-  final Future<void> Function() onLogout;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'This account is not registered as a student or lecturer.\n'
-                'Please contact the exam office.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              FilledButton(onPressed: onLogout, child: const Text('Log out')),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
