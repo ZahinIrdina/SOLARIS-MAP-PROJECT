@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseException;
 import 'package:material_ui/material_ui.dart';
-
 import '../models/user_profile.dart';
-import '../services/firestore_service.dart';
+import '../services/user_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_header.dart';
 import '../widgets/profile_avatar.dart';
@@ -37,8 +36,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
-      await FirestoreService.instance.updateProfile(
-        widget.profile.uid,
+      // Writes directly into students/{matricNo} or lecturers/{staffId}.
+      await UserService.instance.updateProfile(
+        widget.profile,
         fullName: _name.text.trim(),
         phone: _phone.text.trim(),
         faculty: _faculty.text.trim(),
@@ -71,10 +71,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   labelText: 'Full Name',
-                  prefixIcon: Icon(
-                    Icons.account_circle_outlined,
-                    color: AppColors.maroon,
-                  ),
+                  prefixIcon: Icon(Icons.account_circle_outlined,
+                      color: AppColors.maroon),
                 ),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
@@ -94,10 +92,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
                   labelText: 'Phone Number',
-                  prefixIcon: Icon(
-                    Icons.phone_outlined,
-                    color: AppColors.maroon,
-                  ),
+                  prefixIcon:
+                      Icon(Icons.phone_outlined, color: AppColors.maroon),
                 ),
                 validator: (v) {
                   final t = v?.trim() ?? '';
@@ -113,10 +109,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   labelText: 'Faculty',
-                  prefixIcon: Icon(
-                    Icons.school_outlined,
-                    color: AppColors.maroon,
-                  ),
+                  prefixIcon:
+                      Icon(Icons.school_outlined, color: AppColors.maroon),
                 ),
               ),
               const SizedBox(height: 28),
