@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-
 import '../models/exam.dart';
 import '../models/user_profile.dart';
 import '../services/firestore_service.dart';
@@ -27,9 +26,8 @@ class _AppShellState extends State<AppShell> {
   static const _homeTab = 1;
 
   int _index = _homeTab;
-  late Stream<Exam?> _examStream = FirestoreService.instance.watchExam(
-    widget.profile.examId,
-  );
+  late Stream<Exam?> _examStream =
+      FirestoreService.instance.watchExam(widget.profile.examId);
 
   @override
   void didUpdateWidget(covariant AppShell oldWidget) {
@@ -66,8 +64,16 @@ class _AppShellState extends State<AppShell> {
           ),
           drawer: AppDrawer(
             profile: profile,
-            onSelectTab: (i) => setState(() => _index = i),
-            onOpenWashroomHistory: _openWashroomHistory,
+            items: [
+              DrawerItem(Icons.home_rounded, 'Home',
+                  () => setState(() => _index = _homeTab)),
+              DrawerItem(Icons.description_outlined, 'Examination Slip',
+                  () => setState(() => _index = _slipTab)),
+              DrawerItem(Icons.history, 'Washroom Break History',
+                  _openWashroomHistory),
+              DrawerItem(Icons.person_outline, 'Profile',
+                  () => setState(() => _index = 2)),
+            ],
           ),
           body: IndexedStack(
             index: _index,
