@@ -58,6 +58,10 @@ class _StudentLoginViewState extends State<StudentLoginView> {
   }) {
     return TextField(
       controller: controller,
+      onChanged: (_) {
+        final vm = context.read<AuthViewModel>();
+        if (vm.errorMessage != null) vm.clearError();
+      },
       obscureText: isPassword && isPasswordHidden, //password visibility
       keyboardType: isPassword
           ? TextInputType.text
@@ -185,11 +189,27 @@ class _StudentLoginViewState extends State<StudentLoginView> {
 
               // Error Message Display
               if (viewModel.errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
-                  child: Text(
-                    viewModel.errorMessage!,
-                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFDECEC),
+                    border: Border.all(color: Colors.red.shade300),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red.shade700, size: 18),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          viewModel.errorMessage!,
+                          style: TextStyle(color: Colors.red.shade800, fontSize: 13),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
