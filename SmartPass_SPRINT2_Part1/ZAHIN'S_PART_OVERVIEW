@@ -1,0 +1,48 @@
+Here are a few changes made:
+
+    1. Adding Manual-Check In function with:
+        - max students for each Male and Female having a washroom break is 2. If more than 2, OUTPUT: Limit reached and system won't update.
+        - Need to do Metal Detector Check first before submit.
+        - If students is not exist, OUTPUT: User Not Found.
+
+    2. Adjust Registration page to enter user's gender.
+        - This is because nak tulis satu-satu gender utk each users ni renyah gilaa. So better register dgn gender skali siap ii.
+
+    3. Reset Firebase
+        - Delete account user yang lama sbb format baru ada gender.
+        - Collection for Students and Lecturer x guna sbb in the end system x tgk yg tu pun. System amik directly from Users collection.
+        - nanti maybe kena edit lgi lepas dh tambah features lain.
+
+    4. Adding Initial state for QR-Scan
+
+    5. Adding Initial State for Hall Movement Logs
+        - This one can only be update after completing Active Students Break Details because it needed some data from there, such as:
+            1. Time
+            2. Date
+            3. Invigilator in-charge name
+            4. Location
+    -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        !!! About Dr's comment for registration detect id tu, ni explanation untuk code skrg:
+        
+        Your lecturer is saying: "Don't just look at a 5-digit ID to guess if someone is an invigilator. The database must explicitly tell the app their role."
+
+        Right now, your registration form detects the role based on the ID format (A123 vs 12345) and then saves role: 'student' or role: 'invigilator' into the users collection.
+
+        Because of this, your AuthWrapper already works exactly how your lecturer wants! When you log in, the app ignores the ID and checks Firestore:
+
+        dart
+        // In auth_wrapper.dart
+        final role = roleSnapshot.data; 
+        if (role == 'student') return const StudentDashboard();
+        if (role == 'invigilator') return const InvigilatorDashboardView();
+        Why you should NOT divide the collection:
+        If you create separate students and lecturers collections, your entire app will break.
+
+        AuthWrapper: You would have to write complex code to check two collections to find out who logged in.
+
+        Registration: You would have to write if (role == 'student') { save to students } else { save to lecturers }.
+
+        Queries: Your manual check-in function would have to search the students collection, but your login function searches users. It creates a massive mess.
+
+        The Industry Standard: You keep everyone in one users collection, and you use the role field to differentiate them. This is exactly what Google, Facebook, and Amazon do.

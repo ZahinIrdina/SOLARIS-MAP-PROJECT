@@ -1,0 +1,5 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "cmake.sourceDirectory": "C:\\MAP\\SmartPass_SPRINT2_Part1",
+    "cmake.ignoreCMakeListsMissing": true
+}
