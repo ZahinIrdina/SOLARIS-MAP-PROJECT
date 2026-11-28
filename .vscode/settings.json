@@ -1,3 +1,4 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cmake.sourceDirectory": "C:/GitHub/SOLARIS-MAP-PROJECT/SmartPass_SPRINT1/linux"
 }

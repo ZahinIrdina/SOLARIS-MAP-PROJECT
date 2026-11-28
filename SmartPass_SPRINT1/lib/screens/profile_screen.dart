@@ -1,12 +1,10 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:provider/provider.dart';
 
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
 import '../widgets/info_row.dart';
 import '../widgets/profile_avatar.dart';
 import 'edit_profile_screen.dart';
-import '../viewmodels/auth_viewmodel.dart'; // Import your viewmodel
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.profile});
@@ -74,27 +72,7 @@ class ProfileScreen extends StatelessWidget {
                   label: 'Faculty',
                   value: profile.faculty,
                 ),
-
-                // --- ADDED LOGOUT BUTTON HERE ---
-                const SizedBox(height: 20),
-                TextButton.icon(
-                  onPressed: () {
-                    // Call your ViewModel to log out
-                    context.read<AuthViewModel>().logout();
-                  },
-                  icon: const Icon(Icons.logout, color: Colors.red),
-                  label: const Text(
-                    'Logout',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // --------------------------------
+                
               ],
             ),
           ),
@@ -102,4 +80,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
+}

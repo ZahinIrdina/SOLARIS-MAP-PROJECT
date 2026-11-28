@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-
 import '../models/exam.dart';
 import '../models/user_profile.dart';
 import '../widgets/greeting_card.dart';
@@ -12,6 +11,7 @@ class HomeScreen extends StatelessWidget {
     required this.exam,
     required this.loading,
     required this.onOpenExamSlip,
+    required this.onOpenExamInfo,
     required this.onOpenWashroomHistory,
   });
 
@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
   final Exam? exam;
   final bool loading;
   final VoidCallback onOpenExamSlip;
+  final VoidCallback onOpenExamInfo;
   final VoidCallback onOpenWashroomHistory;
 
   @override
@@ -32,6 +33,12 @@ class HomeScreen extends StatelessWidget {
           icon: Icons.description_outlined,
           title: 'Examination\nSlip',
           onTap: onOpenExamSlip,
+        ),
+        const SizedBox(height: 10),
+        HomeTile(
+          icon: Icons.event_note_outlined,
+          title: 'Examination\nInformation',
+          onTap: onOpenExamInfo,
         ),
         const SizedBox(height: 10),
         HomeTile(

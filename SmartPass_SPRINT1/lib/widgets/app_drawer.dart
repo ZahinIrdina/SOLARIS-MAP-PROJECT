@@ -1,21 +1,24 @@
 import 'package:material_ui/material_ui.dart';
-
+import 'package:provider/provider.dart';
 import '../models/user_profile.dart';
 import '../theme/app_theme.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import 'profile_avatar.dart';
 
-/// Side menu opened by the hamburger icon.
+class DrawerItem {
+  const DrawerItem(this.icon, this.label, this.onTap);
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+}
+
+/// Side menu shared by BOTH student and invigilator dashboards, so the look
+/// and the Logout button are the same for every user.
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({
-    super.key,
-    required this.profile,
-    required this.onSelectTab,
-    required this.onOpenWashroomHistory,
-  });
+  const AppDrawer({super.key, required this.profile, required this.items});
 
   final UserProfile profile;
-  final ValueChanged<int> onSelectTab;
-  final VoidCallback onOpenWashroomHistory;
+  final List<DrawerItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -59,36 +62,24 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          _item(
-            Icons.home_rounded,
-            'Home',
-            () => closeThen(() => onSelectTab(1)),
-          ),
-          _item(
-            Icons.description_outlined,
-            'Examination Slip',
-            () => closeThen(() => onSelectTab(0)),
-          ),
-          _item(
-            Icons.history,
-            'Washroom Break History',
-            () => closeThen(onOpenWashroomHistory),
-          ),
-          _item(
-            Icons.person_outline,
-            'Profile',
-            () => closeThen(() => onSelectTab(2)),
-          ),
+          for (final item in items)
+            _tile(item.icon, item.label, () => closeThen(item.onTap)),
           const Spacer(),
+          const Divider(height: 1, color: AppColors.divider),
+          _tile(
+            Icons.logout,
+            'Logout',
+            () => closeThen(() => context.read<AuthViewModel>().logout()),
+          ),
           SizedBox(height: MediaQuery.of(context).padding.bottom + 8),
         ],
       ),
     );
   }
 
-  Widget _item(IconData icon, String label, VoidCallback onTap) => ListTile(
-    leading: Icon(icon, color: AppColors.maroon),
-    title: Text(label, style: AppFonts.serif(size: 15)),
-    onTap: onTap,
-  );
+  Widget _tile(IconData icon, String label, VoidCallback onTap) => ListTile(
+        leading: Icon(icon, color: AppColors.maroon),
+        title: Text(label, style: AppFonts.serif(size: 15)),
+        onTap: onTap,
+      );
 }

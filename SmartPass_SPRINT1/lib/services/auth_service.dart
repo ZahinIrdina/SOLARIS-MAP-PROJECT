@@ -57,6 +57,40 @@ class AuthService {
     return doc.exists ? (doc.data() as Map<String, dynamic>)['role'] : null;
   }
 
+  Future<Map<String, dynamic>?> getUserProfile() async {
+    final user = _auth.currentUser;
+
+    if (user == null) return null;
+
+    final doc = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!doc.exists) return null;
+
+    return doc.data();
+  }
+
+  // UPDATE CURRENT USER PROFILE
+  Future<void> updateUserProfile({
+    required String fullName,
+    required String phone,
+  }) async {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not logged in.');
+    }
+
+    await _firestore.collection('users').doc(user.uid).update({
+      'name': fullName,
+      'phone': phone,
+    });
+
+    await user.updateDisplayName(fullName);
+  }
+
   Future<void> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
